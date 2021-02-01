@@ -35,6 +35,7 @@ namespace AssetsOnMarket.Infrastructure.IoC
             // Infrastructure Data Layer
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<AssetsOnMarketDBContext>();
+
         }
     }
 }

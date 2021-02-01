@@ -3,11 +3,11 @@ using AssetsOnMarket.Application.Interfaces;
 using AssetsOnMarket.Application.ViewModels;
 using AssetsOnMarket.Domain.Commands;
 using AssetsOnMarket.Domain.Core.Bus;
-using AssetsOnMarket.Domain.Interfaces;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using AssetsOnMarket.Domain.Queries;
 using System;
+using Serilog;
 
 namespace AssetsOnMarket.Application.Services
 {
@@ -15,18 +15,26 @@ namespace AssetsOnMarket.Application.Services
     {
         private readonly IMediatorHandler _bus;
         private readonly IMapper _autoMapper;
+        private readonly ILogger _logger;
 
         public AssetService(IMediatorHandler bus, 
-                            IMapper autoMapper)
+                            IMapper autoMapper, 
+                            ILogger logger)
         {
             _bus = bus;
             _autoMapper = autoMapper;
+            _logger = logger;
         }
 
         public async Task ReadAssetsFromFile()
         {
+            _logger.Information("Star reading assets from File CSV...");
+            
             var readAssetsFromFileCommand = new ReadAssetsFromFileCommand();
+           
             await _bus.SendCommand(readAssetsFromFileCommand);
+           
+            _logger.Information("End reading assets from File CSV.");
         }
 
         public async Task AddOrUpdateAsync(AssetPropertyViewModel assetPropertyViewModel)

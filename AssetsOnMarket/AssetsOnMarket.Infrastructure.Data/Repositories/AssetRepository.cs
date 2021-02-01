@@ -8,7 +8,7 @@ using AssetsOnMarket.Domain.Interfaces;
 using AssetsOnMarket.Domain.Models;
 using AssetsOnMarket.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace AssetsOnMarket.Infrastructure.Data.Repositories
 {
@@ -19,7 +19,7 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
         private readonly DbSet<Asset> _dbSetAsset;
         private ILogger _logger;
 
-        public AssetRepository(AssetsOnMarketDBContext context, ILogger<AssetRepository> logger)
+        public AssetRepository(AssetsOnMarketDBContext context, ILogger logger)
         {
             _context = context ?? throw new ArgumentNullException($"{context}");
             _dbSetAssetProperty = _context.Set<AssetProperty>();
@@ -78,7 +78,7 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
 
             if (assetPropAtDB == null)
             {
-                _logger.LogInformation($"AssetId: '{assetProperty.AssetId}' and Property: '{assetProperty.Property}', could not be found on the DB");
+                _logger.Information($"AssetId: '{assetProperty.AssetId}' and Property: '{assetProperty.Property}', could not be found on the DB");
                 await InsertAssetProperty(assetProperty);
             } 
             else if(assetPropAtDB.Timestamp < assetProperty.Timestamp)

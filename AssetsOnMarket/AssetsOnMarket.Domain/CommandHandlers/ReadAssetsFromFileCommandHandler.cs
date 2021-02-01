@@ -3,6 +3,10 @@ using AssetsOnMarket.Domain.Interfaces;
 using AssetsOnMarket.Domain.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,21 +25,35 @@ namespace AssetsOnMarket.Domain.CommandHandlers
         {
             try
             {
-                //if (request.AssetId <= 0)
-                //    throw new ArgumentException("assetId <= 0 ");
+                string filePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\assets\\assetsFile.csv";
 
-                //// Other validations could come here
+                List<AssetProperty> assetsOnFile = new List<AssetProperty>();
+                List<AssetProperty> insertRecords = new List<AssetProperty>();
+                List<AssetProperty> updateRecords = new List<AssetProperty>();
 
-                //AssetProperty assetProperty = new AssetProperty()
-                //{
-                //    AssetId = request.AssetId,
-                //    Property = request.Property,
-                //    Value = request.Value,
-                //    Timestamp = request.Timestamp
-                //};
+                using (StreamReader reader = new StreamReader(filePath))
+                { 
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        if (line != null)
+                        {
+                            line = line.Replace("\"", "");
+                            var values = line.Split(',');
+                            AssetProperty assetProperty = new AssetProperty()
+                            {
+                                AssetId = Convert.ToInt32(values[0]),
+                                Property = values[1].Trim(),
+                                Value = Boolean.Parse(values[2].Trim()),
+                                Timestamp = DateTime.ParseExact(values[3].Trim(), "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+                            };
+                            
+                            assetsOnFile.Add(assetProperty);
+                        }
+                    }
+                }              
 
-                //_assetRepository.AddOrUpdateAssetProperty(assetProperty);
-                //return _assetRepository.SaveChangesAsync();
+
                 return Task.FromResult(1);
             }
             catch (Exception)

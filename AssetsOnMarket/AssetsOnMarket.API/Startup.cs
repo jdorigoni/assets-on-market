@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace AssetsOnMarket.Api
 {
@@ -29,7 +30,9 @@ namespace AssetsOnMarket.Api
                 //options.UseSqlServer(Configuration.GetConnectionString("AssetsOnMarketDBConnection")
                 //    .Replace("{{DB_ENDPOINT}}", Configuration.GetValue<string>("DB_ENDPOINT")));
             });
-                    
+
+            services.AddSingleton(Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger());
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
