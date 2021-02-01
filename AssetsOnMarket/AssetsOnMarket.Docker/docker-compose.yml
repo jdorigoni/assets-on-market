@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  assetsonmarket.api:
+    container_name: assets-on-market-api
+    image: jdorigoni/assetsonmarketapi
+    build:
+      context: .
+      dockerfile: ../AssetsOnMarket.Api/Dockerfile
+    ports:
+      - 5005:80
+    depends_on:
+      - database
+
+  database:
+    image: microsoft/mssql-server-linux:2017-CU3
+    container_name: assets-on-market-db
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"

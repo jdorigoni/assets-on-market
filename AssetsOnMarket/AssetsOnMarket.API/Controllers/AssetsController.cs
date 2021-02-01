@@ -1,27 +1,105 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AssetsOnMarket.Application.Interfaces;
+using AssetsOnMarket.Application.ViewModels;
+using AssetsOnMarket.Domain.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
-namespace AssetsOnMarket.API.Controllers
+namespace AssetsOnMarket.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AssetsController : ControllerBase
     {
-        private readonly ILogger<AssetsController> _logger;
+        private readonly IAssetService _assetService;
+        private readonly ILogger _logger;
 
-        public AssetsController(ILogger<AssetsController> logger)
+        public AssetsController(IAssetService assetService,
+                                ILogger logger)
         {
+            _assetService = assetService;
             _logger = logger;
         }
 
-        [HttpGet]
-        public string HealthCheck()
+        /// <summary>
+        /// 1) Endpoint for reading Assets from internal CSV file and update to DB
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ReadAssets()
         {
-            return "API up and running";
+            string message;
+            try
+            {
+                await _assetService.ReadAssetsFromFile();
+                message = "Assets read from file successfully";
+                _logger.Information(message);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                _logger.Error(message);
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }            
+
+            return Ok(message);
         }
+
+        /// <summary>
+        /// 2) Endpoint for obtaining the Assets IDs for property set to specific value
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAssetsIdsAsync([FromBody] PropertyValueViewModel propertyValueViewModel)
+        {
+            string message;
+            try
+            {
+                var listIds = await _assetService.GetAssetsIdsByPropertyValue(propertyValueViewModel);
+
+                return Ok(listIds);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+
+                _logger.Error(message);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+        }
+
+        /// <summary>
+        /// 3) Endpoint for set Property for Asset individually
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> SetPropertyToAsset([FromBody] AssetPropertyViewModel assetPropertyViewModel)
+        {
+            string message;
+            try
+            {
+                await _assetService.AddOrUpdateAsync(assetPropertyViewModel);
+                message = "Property set to Asset successfully";
+
+                _logger.Information(message);
+
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+
+                _logger.Error(message);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+        }
+
+       
     }
 }
