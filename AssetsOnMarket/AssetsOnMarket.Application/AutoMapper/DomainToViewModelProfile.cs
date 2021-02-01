@@ -17,7 +17,7 @@ namespace AssetsOnMarket.Application.AutoMapper
                                             ap.AssetId,
                                             ap.Property,
                                             ap.Value.ToString(),
-                                            ap.Timestamp.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture))
+                                            ap.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                 ); 
         }
     }

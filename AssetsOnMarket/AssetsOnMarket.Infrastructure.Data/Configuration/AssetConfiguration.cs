@@ -10,6 +10,9 @@ namespace AssetsOnMarket.Infrastructure.Data.Configuration
         {
             builder.ToTable("Asset", "dbo");
 
+            builder.Property(a => a.AssetId)
+                .IsRequired();
+
             builder.Property(a => a.AssetName)
                 .HasMaxLength(255);
         }

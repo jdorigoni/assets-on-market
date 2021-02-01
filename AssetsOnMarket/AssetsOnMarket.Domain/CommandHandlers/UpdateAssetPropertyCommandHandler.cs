@@ -35,7 +35,7 @@ namespace AssetsOnMarket.Domain.CommandHandlers
                 };
                 
                 _assetRepository.AddOrUpdateAssetProperty(assetProperty);
-                return _assetRepository.SaveChangesAsync();
+                return Task.Run(() => _assetRepository.SaveChanges());
             }
             catch (Exception)
             {

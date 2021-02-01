@@ -7,6 +7,7 @@ namespace AssetsOnMarket.Domain.Models
     public class Asset
     {
         #region [Properties]
+        public int Id { get; set; }
         public int AssetId { get; set; }
         public string AssetName { get; set; }
         public virtual ICollection<AssetProperty> AssetProperties { get; set; }

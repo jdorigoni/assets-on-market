@@ -24,11 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Migrations\SeedScripts\DeleteInitialSeedData.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Migrations\SeedScripts\InsertInitialSeedData.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

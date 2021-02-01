@@ -21,23 +21,26 @@ namespace AssetsOnMarket.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("AssetsOnMarket.Domain.Models.Asset", b =>
                 {
-                    b.Property<int>("AssetId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AssetId")
+                        .HasColumnType("int");
 
                     b.Property<string>("AssetName")
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
-                    b.HasKey("AssetId");
+                    b.HasKey("Id");
 
                     b.ToTable("Asset","dbo");
                 });
 
             modelBuilder.Entity("AssetsOnMarket.Domain.Models.AssetProperty", b =>
                 {
-                    b.Property<int>("AssetPropertyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -60,7 +63,7 @@ namespace AssetsOnMarket.Infrastructure.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.HasKey("AssetPropertyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AssetId", "Property")
                         .IsUnique()

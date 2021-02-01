@@ -12,6 +12,11 @@ namespace AssetsOnMarket.Application.ViewModels
         public string Value { get; set; }
         public string Timestamp { get; set; }
 
+        public AssetPropertyViewModel()
+        {
+
+        }
+
         public AssetPropertyViewModel(int assetId, string property, string value, string timestamp)
         {
             AssetId = assetId;

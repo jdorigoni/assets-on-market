@@ -18,7 +18,7 @@ namespace AssetsOnMarket.Application.AutoMapper
                                             vm.AssetId, 
                                             vm.Property, 
                                             Boolean.Parse(vm.Value), 
-                                            DateTime.ParseExact(vm.Timestamp.Trim(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture))
+                                            DateTime.ParseExact(vm.Timestamp.Trim(), "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                 );
 
             CreateMap<PropertyValueViewModel, AssetsIdsByPropertyValueQuery>()

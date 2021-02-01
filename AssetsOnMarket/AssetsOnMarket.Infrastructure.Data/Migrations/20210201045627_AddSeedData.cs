@@ -3,7 +3,7 @@ using System.IO;
 
 namespace AssetsOnMarket.Infrastructure.Data.Migrations
 {
-    public partial class AddInitialSeedData : Migration
+    public partial class AddSeedData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

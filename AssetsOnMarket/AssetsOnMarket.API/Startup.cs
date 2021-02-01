@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AssetsOnMarket.Api.Configurations;
 using AssetsOnMarket.Infrastructure.Data.Context;
 using AssetsOnMarket.Infrastructure.IoC;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace AssetsOnMarket.Api
 {
@@ -37,8 +29,7 @@ namespace AssetsOnMarket.Api
                 //options.UseSqlServer(Configuration.GetConnectionString("AssetsOnMarketDBConnection")
                 //    .Replace("{{DB_ENDPOINT}}", Configuration.GetValue<string>("DB_ENDPOINT")));
             });
-            services.AddSingleton(Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger());
-        
+                    
             services.AddControllers();
 
             services.AddSwaggerGen(c =>

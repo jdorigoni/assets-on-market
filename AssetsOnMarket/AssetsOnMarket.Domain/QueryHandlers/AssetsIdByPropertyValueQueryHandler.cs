@@ -20,7 +20,7 @@ namespace AssetsOnMarket.Domain.QueryHandlers
             _assetRepository = assetRepository;
         }
 
-        public async Task<IEnumerable<int>> Handle(AssetsIdsByPropertyValueQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<int>> Handle(AssetsIdsByPropertyValueQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -28,10 +28,9 @@ namespace AssetsOnMarket.Domain.QueryHandlers
                     throw new ArgumentNullException($"assetsIdsByPropertyValueQuery");
 
                 // Other validations could come here
-                return (await _assetRepository.GetAssetProperty(ap => 
-                                        ap.Property == request.Property && ap.Value == request.Value)
-                                ).ToList()
-                                 .Select(ap => ap.AssetId);
+                return Task.Run(() => _assetRepository.GetAssetProperty(ap => ap.Property == request.Property && ap.Value == request.Value)
+                                            .ToList()
+                                            .Select(ap => ap.AssetId));
             }
             catch (Exception)
             {

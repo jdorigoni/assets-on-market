@@ -44,7 +44,7 @@ namespace AssetsOnMarket.Api.Controllers
                 message = ex.Message;
                 _logger.Error(message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
-            }            
+            }
 
             return Ok(message);
         }
@@ -53,10 +53,12 @@ namespace AssetsOnMarket.Api.Controllers
         /// 2) Endpoint for obtaining the Assets IDs for property set to specific value
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAssetsIdsAsync([FromBody] PropertyValueViewModel propertyValueViewModel)
+        [HttpPost("ListAssets")]
+        public async Task<IActionResult> GetAssetsIdsAsync([FromBody]PropertyValueViewModel propertyValueViewModel)
         {
             string message;
+            if (string.IsNullOrWhiteSpace(propertyValueViewModel.Property) || string.IsNullOrWhiteSpace(propertyValueViewModel.Value))
+                return new BadRequestResult();
             try
             {
                 var listIds = await _assetService.GetAssetsIdsByPropertyValue(propertyValueViewModel);
