@@ -21,13 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetsOnMarket.Infrastructu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure.Bus", "Infrastructure.Bus", "{5B384987-0AC4-42AE-A617-99CB67070136}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{7117F6A8-5790-4EB7-A629-064BB7EDA4F8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{7117F6A8-5790-4EB7-A629-064BB7EDA4F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetsOnMarket.Infrastructure.Bus", "AssetsOnMarket.Infrastructure.Bus\AssetsOnMarket.Infrastructure.Bus.csproj", "{DE165CEE-0D99-4909-9CE2-F8B46B57A111}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetsOnMarket.Domain.Core", "AssetsOnMarket.Domain.Core\AssetsOnMarket.Domain.Core.csproj", "{40ED62FC-2E2B-4330-85F8-936CA38FBF7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetsOnMarket.API", "AssetsOnMarket.Api\AssetsOnMarket.API.csproj", "{0A189A05-937B-43C4-8FEE-66B8913C972A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetsOnMarket.API", "AssetsOnMarket.API\AssetsOnMarket.API.csproj", "{0A189A05-937B-43C4-8FEE-66B8913C972A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{742908F7-69F6-493B-9B76-F8DE75B0EC7A}"
 EndProject
