@@ -6,7 +6,7 @@ namespace AssetsOnMarket.Application.Interfaces
 {
     public interface IAssetService
     {
-        Task ReadAssetsFromFile();
+        Task ReadAssetsFromFile(int batchSize);
 
         Task AddOrUpdateAsync(AssetPropertyViewModel assetPropertyViewModel);
 

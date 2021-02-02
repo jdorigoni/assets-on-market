@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AssetsOnMarket.Application.Interfaces;
 using AssetsOnMarket.Application.ViewModels;
 using AssetsOnMarket.Domain.Models;
+using AssetsOnMarket.Domain.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -17,12 +18,15 @@ namespace AssetsOnMarket.Api.Controllers
     {
         private readonly IAssetService _assetService;
         private readonly ILogger _logger;
+        private readonly BatchConfiguration _batchConfiguration;
 
         public AssetsController(IAssetService assetService,
-                                ILogger logger)
+                                ILogger logger,
+                                BatchConfiguration batchConfiguration)
         {
             _assetService = assetService;
             _logger = logger;
+            _batchConfiguration = batchConfiguration;
         }
 
         /// <summary>
@@ -35,7 +39,7 @@ namespace AssetsOnMarket.Api.Controllers
             string message;
             try
             {
-                await _assetService.ReadAssetsFromFile();
+                await _assetService.ReadAssetsFromFile(_batchConfiguration.MaxBatchSize);
                 message = "Assets read from file successfully";
                 _logger.Information(message);
             }

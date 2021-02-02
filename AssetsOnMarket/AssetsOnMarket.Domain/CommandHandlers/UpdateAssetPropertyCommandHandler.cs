@@ -17,7 +17,7 @@ namespace AssetsOnMarket.Domain.CommandHandlers
             _assetRepository = assetRepository;
         }
 
-        public Task<int> Handle(UpdateAssetPropertyCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateAssetPropertyCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,9 +33,8 @@ namespace AssetsOnMarket.Domain.CommandHandlers
                     Value = request.Value,
                     Timestamp = request.Timestamp
                 };
-                
-                _assetRepository.AddOrUpdateAssetProperty(assetProperty);
-                return Task.Run(() => _assetRepository.SaveChanges());
+
+                return await _assetRepository.AddOrUpdateAssetProperty(assetProperty);
             }
             catch (Exception)
             {

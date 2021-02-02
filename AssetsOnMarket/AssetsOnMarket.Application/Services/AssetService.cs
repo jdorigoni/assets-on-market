@@ -26,15 +26,15 @@ namespace AssetsOnMarket.Application.Services
             _logger = logger;
         }
 
-        public async Task ReadAssetsFromFile()
+        public async Task ReadAssetsFromFile(int batchSize)
         {
             _logger.Information("Star reading assets from File CSV...");
             
-            var readAssetsFromFileCommand = new ReadAssetsFromFileCommand();
+            var readAssetsFromFileCommand = new ReadAssetsFromFileCommand() { MaxBatchSize = batchSize};
            
             await _bus.SendCommand(readAssetsFromFileCommand);
            
-            _logger.Information("End reading assets from File CSV.");
+            _logger.Information("End reading assets from File CSV...");
         }
 
         public async Task AddOrUpdateAsync(AssetPropertyViewModel assetPropertyViewModel)

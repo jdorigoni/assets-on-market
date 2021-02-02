@@ -1,4 +1,5 @@
 using AssetsOnMarket.Api.Configurations;
+using AssetsOnMarket.Domain.Utils;
 using AssetsOnMarket.Infrastructure.Data.Context;
 using AssetsOnMarket.Infrastructure.IoC;
 using MediatR;
@@ -27,11 +28,14 @@ namespace AssetsOnMarket.Api
             services.AddDbContext<AssetsOnMarketDBContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AssetsOnMarketDBConnection"));
+                        
                 //options.UseSqlServer(Configuration.GetConnectionString("AssetsOnMarketDBConnection")
                 //    .Replace("{{DB_ENDPOINT}}", Configuration.GetValue<string>("DB_ENDPOINT")));
             });
 
             services.AddSingleton(Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger());
+            
+            services.AddSingleton(Configuration.GetSection("BatchConfiguration").Get<BatchConfiguration>());
 
             services.AddControllers();
 

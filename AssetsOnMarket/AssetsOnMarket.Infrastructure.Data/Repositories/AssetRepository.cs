@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,14 +30,22 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
 
         public IEnumerable<AssetProperty> GetAssetProperty(Expression<Func<AssetProperty, bool>> filter = null)
         {
-            IQueryable<AssetProperty> queryable = _dbSetAssetProperty;
-            return queryable.Where(filter).ToList();
+            return _dbSetAssetProperty.Where(filter).ToList();
         }
 
         public IEnumerable<Asset> GetAssets(Expression<Func<Asset, bool>> filter = null)
         {
-            IQueryable<Asset> queryable = _dbSetAsset;
-            return queryable.Where(filter).ToList();
+            return _dbSetAsset.Where(filter).ToList();
+        }
+
+        public IEnumerable<AssetProperty> GetAssetPropertyNoTracking(Expression<Func<AssetProperty, bool>> filter = null)
+        {
+            return _dbSetAssetProperty.AsNoTracking().Where(filter).ToList();
+        }
+
+        public IEnumerable<Asset> GetAssetsNoTracking(Expression<Func<Asset, bool>> filter = null)
+        {
+            return _dbSetAsset.AsNoTracking().Where(filter).ToList();
         }
 
         public async Task InsertAsset(Asset asset)
@@ -68,7 +77,7 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
             await _dbSetAssetProperty.AddAsync(assetProperty);
         }
 
-        public async Task AddOrUpdateAssetProperty(AssetProperty assetProperty)
+        public async Task<int> AddOrUpdateAssetProperty(AssetProperty assetProperty)
         {
             if (assetProperty == null) throw new ArgumentException($"assetProperty");
 
@@ -88,6 +97,73 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
                 _dbSetAssetProperty.Update(assetPropAtDB);
             }
 
+            _context.Database.ExecuteSqlInterpolated($"SET IDENTITY_INSERT {typeof(Asset).Name} ON;");
+
+            int numberOfChanges = SaveChanges();
+
+            _context.Database.ExecuteSqlInterpolated($"SET IDENTITY_INSERT {typeof(Asset).Name} OFF;");
+
+            return await Task.Run(() => numberOfChanges);
+        }
+
+        public Task BulkInsertUpdate(List<AssetProperty> assetsOnFile, int maxBatchSize)
+        {
+            try
+            {
+                var insertAssetRecords = new List<Asset>();
+                var insertAssetPropRecords = new List<AssetProperty>();
+                var updateAssetPropRecords = new List<AssetProperty>();
+
+                foreach (var assetPropOnFile in assetsOnFile)
+                {
+                    var assetPropOnDB = GetAssetPropertyNoTracking(ap =>
+                                            ap.AssetId == assetPropOnFile.AssetId &&
+                                            ap.Property == assetPropOnFile.Property)
+                                            .ToList()
+                                            .FirstOrDefault();
+
+                    if (assetPropOnDB != null)
+                    {
+                        if (assetPropOnDB.Timestamp < assetPropOnFile.Timestamp)
+                        {
+                            assetPropOnDB.Timestamp = assetPropOnFile.Timestamp;
+                            assetPropOnDB.Value = assetPropOnFile.Value;
+                            updateAssetPropRecords.Add(assetPropOnDB);
+                        }
+                    }
+                    else
+                    {
+                        Log.Information($"Asset Id: '{assetPropOnFile.AssetId}' - " +
+                                        $"Property: '{assetPropOnFile.Property}' was not found in the Database.");
+
+                        var assetOnDb = GetAssetsNoTracking(a => a.AssetId == assetPropOnFile.AssetId)
+                                            .ToList()
+                                            .FirstOrDefault();
+                        if (assetOnDb == null && 
+                            insertAssetRecords.Find(a => a.AssetId == assetPropOnFile.AssetId) == null)
+                        {    
+                            insertAssetRecords.Add(new Asset()
+                            {
+                                AssetId = assetPropOnFile.AssetId,
+                                AssetName = $"Asset {assetPropOnFile.AssetId}"
+                            });                            
+                        }
+
+                        insertAssetPropRecords.Add(assetPropOnFile);
+                    }
+                }
+
+                return Task.Run(() =>
+                {
+                    _context.BulkInsert(insertAssetRecords, bulk => bulk.BatchSize = maxBatchSize);
+                    _context.BulkInsert(insertAssetPropRecords, bulk => bulk.BatchSize = maxBatchSize);
+                    _context.BulkUpdate(updateAssetPropRecords, bulk => bulk.BatchSize = maxBatchSize);
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }            
         }
 
         public int SaveChanges()
@@ -102,5 +178,6 @@ namespace AssetsOnMarket.Infrastructure.Data.Repositories
                 
             }
         }
+
     }
 }

@@ -7,5 +7,6 @@ namespace AssetsOnMarket.Domain.Commands
 {
     public class ReadAssetsFromFileCommand : Command
     {
+        public int MaxBatchSize { get; set; }
     }
 }

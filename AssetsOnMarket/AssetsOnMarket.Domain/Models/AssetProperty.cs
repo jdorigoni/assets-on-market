@@ -7,7 +7,7 @@ namespace AssetsOnMarket.Domain.Models
     public class AssetProperty
     {
         #region [Properties]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int AssetId { get; set; }
         public string Property { get; set; }
         public bool Value { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AssetsOnMarket.Infrastructure.Data.Migrations
 {
-    public partial class AddInitialSchema : Migration
+    public partial class InitialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,14 +15,13 @@ namespace AssetsOnMarket.Infrastructure.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    AssetId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AssetId = table.Column<int>(nullable: false),
                     AssetName = table.Column<string>(maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Asset", x => x.Id);
+                    table.PrimaryKey("PK_Asset", x => x.AssetId);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,7 +44,7 @@ namespace AssetsOnMarket.Infrastructure.Data.Migrations
                         column: x => x.AssetId,
                         principalSchema: "dbo",
                         principalTable: "Asset",
-                        principalColumn: "Id",
+                        principalColumn: "AssetId",
                         onDelete: ReferentialAction.Restrict);
                 });
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetsOnMarket.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AssetsOnMarketDBContext))]
-    [Migration("20210201045627_AddSeedData")]
-    partial class AddSeedData
+    [Migration("20210202060348_InitialSchema")]
+    partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,26 +23,23 @@ namespace AssetsOnMarket.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("AssetsOnMarket.Domain.Models.Asset", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("AssetId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AssetId")
-                        .HasColumnType("int");
 
                     b.Property<string>("AssetName")
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
-                    b.HasKey("Id");
+                    b.HasKey("AssetId");
 
                     b.ToTable("Asset","dbo");
                 });
 
             modelBuilder.Entity("AssetsOnMarket.Domain.Models.AssetProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
